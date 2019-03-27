@@ -53,7 +53,7 @@ class JSLINQ {
         return false;
     }
     //判断指定对象是否存在
-    Contains(model) {
+    contains(model) {
         for (const a of this) {
             if (a === model) {
                 return true;
