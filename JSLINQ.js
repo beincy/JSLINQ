@@ -15,11 +15,11 @@ class JSLINQ {
     toList() {
         return [...this]
     }
-    //
+    //筛选符合条件的元素
     where(func = (a) => a) {
         return new WhereIterator(this, func);
     }
-    //
+    //获取第一个元素
     first(func = (a) => a) {
         for (const a of this) {
             if (func(a)) {
@@ -28,18 +28,22 @@ class JSLINQ {
         }
         return undefined;
     }
+    //投影
     select(func = (a) => a) {
         return new SelectIterator(this, func);
     }
+    //判断是否包含任意一个元素
     any() {
         for (const a of this) {
             return true;
         }
         return false;
     }
+    //取若若干个元素
     take(count) {
         return new TakeIterator(this, count);
     }
+    //判断指定元素是否存在
     exist(func = (a) => a) {
         for (const a of this) {
             if (func(a)) {
@@ -48,6 +52,7 @@ class JSLINQ {
         }
         return false;
     }
+    //判断指定对象是否存在
     Contains(model) {
         for (const a of this) {
             if (a === model) {
@@ -56,9 +61,11 @@ class JSLINQ {
         }
         return false;
     }
+    //去除某个、多个元素
     remove(func = (a) => a, count = 1) {
         return RemoveIterator(this, func, count);
     }
+    //去除全部符合条件的元素
     removeAll(func = (a) => a) {
         return RemoveIterator(this, func, 0);
     }
@@ -81,7 +88,7 @@ class WhereIterator extends JSLINQ {
         }
     }
 }
-//
+//Select的执行类
 class SelectIterator extends JSLINQ {
     //构造函数
     constructor(list, func) {
@@ -96,6 +103,7 @@ class SelectIterator extends JSLINQ {
         }
     }
 }
+//Take的执行类
 class TakeIterator extends JSLINQ {
     //构造函数
     constructor(list, count) {
@@ -114,6 +122,7 @@ class TakeIterator extends JSLINQ {
         }
     }
 }
+//Remove的执行类
 class RemoveIterator extends JSLINQ {
     //构造函数
     constructor(list, func, count) {
