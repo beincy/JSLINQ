@@ -63,11 +63,21 @@ class JSLINQ {
     }
     //去除某个、多个元素
     remove(func = (a) => a, count = 1) {
-        return RemoveIterator(this, func, count);
+        return new RemoveIterator(this, func, count);
     }
     //去除全部符合条件的元素
     removeAll(func = (a) => a) {
-        return RemoveIterator(this, func, 0);
+        return new  RemoveIterator(this, func, 0);
+    }
+    // 排序
+    orderBy(func = (a) => a){
+        // func,排序的key
+        return new OrderByIterator(func)
+    }
+    // 排序,倒序
+    orderByDesc(func = (a) => a){
+        // func,排序的key
+        return new OrderByIterator(func,true)
     }
 }
 //where的执行类
@@ -145,5 +155,15 @@ class RemoveIterator extends JSLINQ {
 
             }
         }
+    }
+}
+//orderby 的执行类
+class OrderByIterator extends JSLINQ {
+    //构造函数
+    constructor(list, func=(a)=>a, reverse=False) {
+        super(list);
+        orderKey=(a,b)=>func(a)-func(b)
+        if (reverse==true)orderKey=(a,b)=>func(b)-func(a)
+        this.inerList.sort((a,b)=>func(a)-func(b))
     }
 }
