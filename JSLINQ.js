@@ -63,11 +63,29 @@ class JSLINQ {
     }
     //去除某个、多个元素
     remove(func = (a) => a, count = 1) {
-        return RemoveIterator(this, func, count);
+        return new RemoveIterator(this, func, count);
     }
     //去除全部符合条件的元素
     removeAll(func = (a) => a) {
-        return RemoveIterator(this, func, 0);
+        return new RemoveIterator(this, func, 0);
+    }
+    // 排序
+    orderBy(func = (a) => a) {
+        // func,排序的key
+        return new OrderByIterator(this, func)
+    }
+    // 排序,倒序
+    orderByDesc(func = (a) => a) {
+        // func,排序的key
+        return new OrderByIterator(this, func, true)
+    }
+    groupBy(func = (a) => a) {
+        // 对数组进行分组
+        return new GroupByIterator(this, func, true)
+    }
+    distinct(func = (a) => a) {
+        // 去重
+        return new Distinct(this, func)
     }
 }
 //where的执行类
@@ -144,6 +162,91 @@ class RemoveIterator extends JSLINQ {
                 }
 
             }
+        }
+    }
+}
+//orderby 的执行类
+class OrderByIterator extends JSLINQ {
+    //构造函数
+    constructor(list, key = (a) => a, reverse = false) {
+        super(list);
+        if (reverse == true) {
+            this._func = (a, b) => key(b) - key(a) 
+        }
+        else {
+            this._func = (a, b) => key(a) - key(b)
+        }
+        // this.inerList.sort((a,b)=>func(a)-func(b))
+    }
+    //生成器
+    *[Symbol.iterator]() {
+        //先对数据排序，然后进行循环
+        this.inerList = [...this.inerList]
+        this.inerList.sort(this._func)
+        for (let item of this.inerList) {
+            yield item;
+        }
+    }
+    thenBy(key = (a) => a, reverse = false) {
+        // 递归减法
+        this._func = (a, b) => {
+            difference = this._func(a, b)
+            if (difference == 0) {
+                if (reverse) {
+                    return key(b) - key(a)
+                }
+                return key(a) - key(b)
+            }
+            return this
+        }
+    }
+    thenByDesc(key = (a) => a) {
+        this.thenBy(key, true)
+        return this
+    }
+}
+//进行分组
+class GroupByIterator {
+    //构造函数
+    constructor(list, keyFunc) {
+        this._inerList = list
+        this._keyFunc = keyFunc
+    }
+    //生成器
+    *[Symbol.iterator]() {
+        //分组
+        this.group = {}
+        for (const iterator of this._inerList) {
+            let key = this._keyFunc(iterator)
+            if (this.group[key]) {
+                this.group[key].push(iterator)
+            }
+            else {
+                this.group[key] = [iterator]
+            }
+        }
+        for (let item in this.group) {
+            yield {key:item,value:this.group[item]};
+        }
+    }
+}
+class Distinct extends JSLINQ {
+    //根据规则去重
+    //构造函数
+    constructor(list, keyFunc) {
+        super(list);
+        this._keyFunc = keyFunc
+    }
+    //生成器
+    *[Symbol.iterator]() {
+        let existDic = {}
+        for (let item of this.inerList) {
+            let key = this._keyFunc(item)
+            if (existDic[key]) {
+                continue
+            }
+            existDic[key] = true
+            yield item
         }
     }
 }
