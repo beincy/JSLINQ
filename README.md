@@ -94,3 +94,35 @@ for(let a of myList){
 console.log(a);
 }
 ```
+## orderBy
+orderBy;
+```
+let myList= enumerables.orderBy(w=>w);
+for(let a of myList){
+console.log(a);
+}
+```
+## orderByDesc
+orderBy;
+```
+let myList= enumerables.orderByDesc(w=>w);
+for(let a of myList){
+console.log(a);
+}
+```
+## groupBy
+groupBy;
+```
+let myList= enumerables.groupBy(w=>w);
+for(let a of myList){
+console.log(a);
+}
+```
+## distinct
+distinct;
+```
+let myList= enumerables.distinct(w=>w);
+for(let a of myList){
+console.log(a);
+}
+```
