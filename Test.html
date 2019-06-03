@@ -8,5 +8,13 @@
 </head>
 <body>
     <script src="JSLINQ.js"></script>
+    <script>
+    let a=[{a:1},{a:5},{a:4},{a:6},{a:9},{a:7},{a:6},{a:1}]
+    let b=new JSLINQ(a)
+    let c=b.groupBy((t)=>t.a)
+    for (const iterator of c) {
+        console.log(iterator)
+    }
+    </script>
 </body>
 </html>
