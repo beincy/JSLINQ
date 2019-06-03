@@ -13,7 +13,14 @@
     let b=new JSLINQ(a)
     let c=b.groupBy((t)=>t.a)
     for (const iterator of c) {
-        console.log(iterator)
+        // console.log(iterator)
+        console.log(iterator.value)
+        for (const item of iterator.value) {
+            console.log(item)
+        }
+    //   for (const item of iterator.value) {
+    //     //   console.log(item)
+    //   }
     }
     </script>
 </body>

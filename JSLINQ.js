@@ -85,7 +85,7 @@ class JSLINQ {
     }
     distinct(func = (a) => a) {
         // 去重
-        return new Distinct(this, func)
+        return new DistinctIterator(this, func)
     }
 }
 //where的执行类
@@ -171,7 +171,7 @@ class OrderByIterator extends JSLINQ {
     constructor(list, key = (a) => a, reverse = false) {
         super(list);
         if (reverse == true) {
-            this._func = (a, b) => key(b) - key(a) 
+            this._func = (a, b) => key(b) - key(a)
         }
         else {
             this._func = (a, b) => key(a) - key(b)
@@ -209,28 +209,56 @@ class OrderByIterator extends JSLINQ {
 class GroupByIterator {
     //构造函数
     constructor(list, keyFunc) {
-        this._inerList = list
-        this._keyFunc = keyFunc
+        this.inerList = list
+        this.keyFunc = keyFunc
+        this.grdoupCollection = {}
     }
     //生成器
     *[Symbol.iterator]() {
         //分组
-        this.group = {}
-        for (const iterator of this._inerList) {
-            let key = this._keyFunc(iterator)
-            if (this.group[key]) {
-                this.group[key].push(iterator)
+        let group = {}
+        for (const item of this.inerList) {
+            let itemKey = this.keyFunc(item)
+            if (group[itemKey] != undefined) {
+                continue
             }
-            else {
-                this.group[key] = [iterator]
-            }
-        }
-        for (let item in this.group) {
-            yield {key:item,value:this.group[item]};
+            group[itemKey]=true
+            yield new GroupByItemIterator(itemKey, this)
         }
     }
 }
-class Distinct extends JSLINQ {
+class GroupByItemIterator {
+
+    //构造函数
+    constructor(key, gpModel) {
+        this.key = key
+        this._gpModel = gpModel
+        this.value = new JSLINQ(this)
+    }
+    //生成器
+    *[Symbol.iterator]() {
+        //分组
+        if (this._gpModel.grdoupCollection[this.key] == undefined) {
+            for (const item of this._gpModel.inerList) {
+                let itemKey=this._gpModel.keyFunc(item)
+                if (this._gpModel.grdoupCollection[itemKey] == undefined) {
+                    this._gpModel.grdoupCollection[itemKey] = [item]
+                } else {
+                    this._gpModel.grdoupCollection[itemKey].push(item)
+                }
+                if (itemKey == this.key) {
+                    yield item
+                }
+            }
+        }
+        else {
+            for (const item of this._gpModel.grdoupCollection[this.key]) {
+                yield item
+            }
+        }
+    }
+}
+class DistinctIterator extends JSLINQ {
     //根据规则去重
     //构造函数
     constructor(list, keyFunc) {
