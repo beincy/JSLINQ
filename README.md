@@ -11,6 +11,10 @@ use import module
 ```
 import JSLINQ.js
 ```
+```
+yarn add jslinq-lite
+nmp install jslinq-lite
+```
 
 >and now you can use next api
 
