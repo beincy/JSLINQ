@@ -1,0 +1,24 @@
+{
+  "name": "jslinq-lite",
+  "version": "1.0.0",
+  "description": "简单快速的轻量级linq模块",
+  "main": "JSLINQ.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beincy/JSLINQ.git"
+  },
+  "keywords": [
+    "linq",
+    "likec#",
+    "lite"
+  ],
+  "author": "beincy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/beincy/JSLINQ/issues"
+  },
+  "homepage": "https://github.com/beincy/JSLINQ#readme"
+}

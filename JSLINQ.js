@@ -222,7 +222,7 @@ class GroupByIterator {
             if (group[itemKey] != undefined) {
                 continue
             }
-            group[itemKey]=true
+            group[itemKey] = true
             yield new GroupByItemIterator(itemKey, this)
         }
     }
@@ -240,7 +240,7 @@ class GroupByItemIterator {
         //分组
         if (this._gpModel.grdoupCollection[this.key] == undefined) {
             for (const item of this._gpModel.inerList) {
-                let itemKey=this._gpModel.keyFunc(item)
+                let itemKey = this._gpModel.keyFunc(item)
                 if (this._gpModel.grdoupCollection[itemKey] == undefined) {
                     this._gpModel.grdoupCollection[itemKey] = [item]
                 } else {
@@ -278,3 +278,5 @@ class DistinctIterator extends JSLINQ {
         }
     }
 }
+
+export default JSLINQ
